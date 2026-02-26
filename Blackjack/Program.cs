@@ -25,8 +25,6 @@ namespace Blackjack
                 Deck.DrawCardTo(Deck.DealerCards);
                 //Display dealer cards
                 Console.WriteLine($"Dealer's cards: ? | {Deck.DealerCards[1]} \n");
-
-                ///Deprecated: Console.WriteLine($"Sum of Dealer's cards is {GameDeck.SumToMessage(GameDeck.SumOf(Deck.DealerCards))} \n");
                 
                 //Loop asking if player wants to draw
                 while (!playerIsBust)
@@ -174,16 +172,13 @@ namespace Blackjack
             private readonly Random rnd = new();
             private int _totalCards;
 
-            //Add some logic for these
             public List<object> PlayerCards { get; private set; }
             public List<object> DealerCards { get; private set; }
 
 
 
-            /// <summary>
-            /// Selects a random card in the deck, removes it, updates the card count, and returns the card.
-            /// </summary>
-            /// <returns>Character representing the drawn card</returns>
+            /// <summary> Selects a random card in the deck, removes it, updates the card count, adds the card to the list argument, and returns the card.</summary>
+            /// <returns>Char or Int representing the drawn card</returns>
             public object DrawCardTo(List<object> CardList)
             {
                 Debug.Assert(MainDeck != null && _totalCards > 0);
@@ -194,7 +189,8 @@ namespace Blackjack
                 CardList.Add(selectedCard);
                 return selectedCard;
             }
-
+            /// <summary> Calculates valid hand totals and returns them in a 0–2 element list.</summary>
+            /// <remarks> If the list is empty, the hand is bust.</remarks>
             public static List<int> SumOf(List<object> inputCards)
             {
                 List<int> sumList = [];
@@ -243,7 +239,6 @@ namespace Blackjack
                         sumList.Add(sum + 1);
                     }
                 }
-                //Convert list to string output
                 return sumList;
             }
             
@@ -251,6 +246,7 @@ namespace Blackjack
             {
                 if (sumList.Count == 0)
                 {
+                    //Currently unreachable in implementation.
                     return "over 21.";
                 }
                 else if (sumList.Count == 1)
@@ -263,6 +259,10 @@ namespace Blackjack
                 }
             }
 
+            /// <summary> Converts a list of cards into a string separated by '|' </summary>
+            /// <param name="cardList"> The hand to be displayed.</param>
+            /// <param name="omitFirstCard"> Whether the first card should be visible (Used for dealer)</param>
+            /// <returns>String showing the cards in the list</returns>
             internal static string CardsAsString(List<object> cardList, bool omitFirstCard)
             {
                 string output = "";
